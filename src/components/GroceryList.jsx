@@ -1,0 +1,48 @@
+import { useState } from "react";
+import Item from "./Item";
+
+export default function GroceryList({
+  items,
+  onDeleteItem,
+  onToggleItem,
+  onclearItems,
+}) {
+  const [sortBy, setSortBy] = useState("input");
+
+  let sortedItems;
+  switch (sortBy) {
+    case "name":
+      sortedItems = items.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "checked":
+      sortedItems = items.sort((a, b) => (a.checked > b.checked ? 1 : -1));
+      break;
+    default:
+      sortedItems = items;
+  }
+
+  return (
+    <>
+      <div className="list">
+        <ul>
+          {sortedItems.map((item) => (
+            <Item
+              item={item}
+              key={item.id}
+              onDeleteItem={onDeleteItem}
+              onToggleItem={onToggleItem}
+            />
+          ))}
+        </ul>
+      </div>
+      <div className="actions">
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value="input">Urutkan berdasarkan urutan input</option>
+          <option value="name">Urutkan berdasarkan nama barang</option>
+          <option value="checked">Urutkan berdasarkan ceklis</option>
+        </select>
+        <button onClick={onclearItems}>Bersihkan Daftar</button>
+      </div>
+    </>
+  );
+}
